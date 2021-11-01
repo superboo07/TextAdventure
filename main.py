@@ -92,43 +92,41 @@ def getRoomDescription(roomName):
     foundDescription = False
 
     roomFileArray = getRoomFileArray(roomName)
-    for roomVar in roomFileArray:
-        if (foundDescription == False):
-            roomVarSplit = roomVar.split("{")
-            if (roomVarSplit[0].lower() == 'description '): 
-                foundDescription = True 
-                if (roomVarSplit[1].__len__() > 0): descriptionArray.append(roomVarSplit[1])
-        else:
-            if (not roomVar.__contains__("}")):
-                descriptionArray.append(roomVar)
-            else: 
-                foundDescription = False
-                roomVarSplit = roomVar.split("}")
-                if (roomVarSplit[0].__len__() > 0): descriptionArray.append(roomVarSplit[0])
+    descriptionArray = getStringInbetween(roomFileArray, 'description ', '{', '}')
     return descriptionArray
 
 def getRoomDirections(roomName, excludeHideMarker):
+    directionsArray = []
     directionsList = {"": ''}
     foundDirections = False
 
     roomFileArray = getRoomFileArray(roomName)
-    # There must be something in the list for it to allow adding to the list.
-    for roomVar in roomFileArray:
-        if (foundDirections == False):
-            roomVarSplit = roomVar.split("{")
-            if (roomVarSplit[0].lower() == 'directions '): foundDirections = True
-        else:
-            roomVarSplit = roomVar.split(": ")
-            # Make sure this line doesn't contain an }, this will technically flag all directions
-            # with one in their name, but that won't matter since this symbol shouldn't even be put in one.
-            if (not roomVarSplit[0].__contains__("}")):
-                # Try adding the direction to the list, this method should no longer fail. Though I still have exception handling just in case.
-                try: 
-                    if (excludeHideMarker):
-                        roomVarSplit[0] = roomVarSplit[0].replace("!", "")
-                    directionsList[roomVarSplit[0].lower()] = roomVarSplit[1]
-                except: print("Tried to add invalid command to directions list")
-            else: foundDirections = False
+    directionsArray = getStringInbetween(roomFileArray, 'directions ', '{', '}')
+    for direction in directionsArray:
+        directionSplit = direction.split(": ")
+        if (excludeHideMarker):
+            directionSplit[0] = directionSplit[0].replace("!", "")
+        directionsList[directionSplit[0].lower()] = directionSplit[1]
+
     return directionsList
+
+def getStringInbetween(stringArray, name, start, end):
+    outputArray = []
+    foundName = False
+
+    for string in stringArray:
+        if (foundName == False):
+            stringSplit = string.split(start)
+            if (stringSplit[0].lower() == name): 
+                foundName = True 
+                if (stringSplit[1].__len__() > 0): outputArray.append(stringSplit[1])
+        else:
+            if (not string.__contains__(end)):
+                outputArray.append(string)
+            else: 
+                foundName = False
+                stringSplit = string.split(end)
+                if (stringSplit[0].__len__() > 0): outputArray.append(stringSplit[0])
+    return outputArray
 
 main()
