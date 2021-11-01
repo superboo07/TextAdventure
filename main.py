@@ -54,10 +54,10 @@ def directionsLoop(roomName):
                 nextRoom = directions.get(commandSplit[1])
                 goToRoom(nextRoom)
                 return
-        print("I don't understand where you are trying to go. For a list of directions type 'look' into the terminal.")
+        print("I don't understand where you are trying to go. For a list of directions type 'look around' into the terminal.")
         directionsLoop(roomName)
     elif (commandSplit[0] == "help"):
-        print("In order to move around you must type 'Go [Direction]'.\nif you need the list of directions you can go to, type 'look' into the terminal.\nIf you wish to exit the program then type 'Exit' into the terminal." )
+        print("In order to move around you must type 'Go [Direction]'.\nif you need the list of directions you can go to, type 'look around' into the terminal.\nIf you wish to exit the program then type 'Exit' into the terminal." )
         directionsLoop(roomName)
         return
     elif (commandSplit[0] == "look"):
