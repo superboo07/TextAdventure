@@ -1,10 +1,33 @@
 # Quick and dirty multiple choice thing. Acts kind of like an text adventure.
 # You can modify or add rooms in the Game/ folder. The room you want the player to start in must be named 'StartingRoom.TA'
+# Style Guide:
+# def Example():
+#   [List Globals first]
+#   [List Defaults]
+#
+#   [Now do logic]
+
 
 import os
 
+# List all global variables here
+global gameName
+
 def main():
-    goToRoom('StartingRoom')
+    global gameName
+    foundGame = False
+
+    games = os.listdir('Games/')
+    print("Please choose a game from the list below: ")
+    for game in games:
+        print(game)
+    while ( not foundGame ):
+        gameName = input("> ")
+        if (games.__contains__(gameName)): 
+            goToRoom('StartingRoom')
+            foundGame = True
+        else:
+            print("Please choose a valid game")
 
     
 def goToRoom(roomName):
@@ -61,7 +84,7 @@ def customString(string, stringVariables: list):
 
 # Opens the file with the name of the room and splits it up into an array
 def getRoomFileArray(roomName):
-    with open('Game/' + roomName + '.TA') as gameFile: roomFileArray = [roomFileLine.strip() for roomFileLine in gameFile]
+    with open('Games/' + gameName + "/" + roomName + '.TA') as gameFile: roomFileArray = [roomFileLine.strip() for roomFileLine in gameFile]
     return roomFileArray
     
 def getRoomDescription(roomName):

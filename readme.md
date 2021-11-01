@@ -8,7 +8,7 @@ Since the version I submitted for my assignment i've improved the strictness of 
 
 ## File format
 
-All room files must go into the `[Rootfolder]/Game/folder`, and the starting room must be named `StartingRoom.TA`. Any lines in the examples starting with an # are comments, the format itself does not have any kind of comments at the moment
+All room files must go into the `[Rootfolder]/Games/[Game]/folder`, and the starting room must be named `StartingRoom.TA`. Any lines in the examples starting with an # are comments, the format itself does not have any kind of comments at the moment
 
 ### Description block
 All I have to say about this block is: while the engine will *technically* accept multiple description blocks, please don't do this. 
