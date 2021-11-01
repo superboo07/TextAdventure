@@ -1,0 +1,7 @@
+description {
+    You crawl back into the crawlspace and quickly reach the closet again. To enter it please type 'Go Forward', or if you want to go back type 'Go Back'
+}
+directions {
+    Back: SpecialRoom
+    Forward: StartingRoom
+}

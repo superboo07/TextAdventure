@@ -1,0 +1,9 @@
+description {
+    Welcome to the end of the demo. 
+    
+    If you wish to leave the program you may type 'Exit'. However if you wish to continue exploring type 'Go Back'
+}
+directions {
+    !Back: Kitchen
+    Kitchen: Kitchen
+}

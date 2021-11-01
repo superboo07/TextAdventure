@@ -1,0 +1,10 @@
+description {
+    You enter the room to see an small desk with an monitor sitting on top. It's screen is on and demands attention. 
+    
+    If you wish to interact with the monitor please type 'Go Monitor'. If you wish to exit this room type 'Go Back'.
+}
+directions {
+    Monitor: Monitor
+    !Back: Crawlspace2
+    Crawlspace: Crawlspace2
+}

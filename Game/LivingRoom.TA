@@ -1,0 +1,9 @@
+description {
+    You walk into the Living room, there isn't much to look at here. 
+    
+    It's a dead end, you're only choice is to go back into the hallway.
+}
+directions {
+    !Back: Hallway
+    Hallway: Hallway
+}

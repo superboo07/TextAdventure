@@ -1,0 +1,13 @@
+description {
+    You walk into the hallway, it's dim light is just bright enough for you to see. 
+    
+    On your left is what appears to be the living room, and on your right is the kitchen. 
+}
+directions {
+    !Back: StartingRoom
+    Closet: StartingRoom
+    !Left: LivingRoom
+    Living Room: LivingRoom
+    !Right: Kitchen
+    Kitchen: Kitchen
+}

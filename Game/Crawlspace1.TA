@@ -1,0 +1,9 @@
+description {
+    You crawl into the crawlspace and find an room at the other end. 
+    
+    If you want to enter this room type "Go Forward", if you do not want to enter this room type "Go Back"
+}
+directions {
+    Back: StartingRoom
+    Forward: SpecialRoom
+}

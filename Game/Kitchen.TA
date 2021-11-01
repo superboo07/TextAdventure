@@ -1,0 +1,11 @@
+description {
+    The kitchen appliences reflect off it's tiled floor. 
+    
+    Ahead of you is an open door, a bright light on the other side prevents you from seeing past it. In back of you is the hallway you entered the room through.
+}
+directions {
+    Back: Hallway
+    Hallway: Hallway
+    Forward: End
+    Door: End
+}

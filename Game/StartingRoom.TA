@@ -1,0 +1,11 @@
+Description {
+    The closet is cramped and has little space for you to move around. 
+    
+    On the right side of the room is an crawlspace, though you doubt it leads anywhere useful. On the left is an open door that leads into an hallway. 
+}
+directions {
+    !Left: Hallway
+    Hallway: Hallway
+    !Right: Crawlspace1
+    Crawlspace: Crawlspace1
+}
