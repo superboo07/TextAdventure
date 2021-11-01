@@ -4,6 +4,6 @@ description {
     If you want to enter this room type "Go Forward", if you do not want to enter this room type "Go Back"
 }
 directions {
-    Back: StartingRoom
+    Back: Closet
     Forward: SpecialRoom
 }

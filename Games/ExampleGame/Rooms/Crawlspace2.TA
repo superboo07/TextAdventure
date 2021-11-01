@@ -5,5 +5,5 @@ description {
 }
 directions {
     Back: SpecialRoom
-    Forward: StartingRoom
+    Forward: Closet
 }

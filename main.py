@@ -12,6 +12,7 @@ import os
 
 # List all global variables here
 global gameName
+global gameInfoList
 
 def main():
     global gameName
@@ -24,11 +25,20 @@ def main():
     while ( not foundGame ):
         gameName = input("> ")
         if (games.__contains__(gameName)): 
-            goToRoom('StartingRoom')
+            startGame()
             foundGame = True
         else:
             print("Please choose a valid game")
 
+def startGame():
+    global gameInfoList
+    gameInfoList = {'': ""}
+
+    with open('Games/' + gameName + "/GameInfo.TA") as aboutFile: aboutFileArray = [aboutFileLine.strip() for aboutFileLine in aboutFile]
+    for aboutFileVar in aboutFileArray:
+        aboutFileVarSplit = aboutFileVar.split(": ")
+        gameInfoList[aboutFileVarSplit[0].lower()] = aboutFileVarSplit[1]
+    goToRoom(gameInfoList['startingroom'])
     
 def goToRoom(roomName):
     os.system('cls||clear')
@@ -84,7 +94,7 @@ def customString(string, stringVariables: list):
 
 # Opens the file with the name of the room and splits it up into an array
 def getRoomFileArray(roomName):
-    with open('Games/' + gameName + "/" + roomName + '.TA') as gameFile: roomFileArray = [roomFileLine.strip() for roomFileLine in gameFile]
+    with open('Games/' + gameName + "/Rooms/" + roomName + '.TA') as gameFile: roomFileArray = [roomFileLine.strip() for roomFileLine in gameFile]
     return roomFileArray
     
 def getRoomDescription(roomName):

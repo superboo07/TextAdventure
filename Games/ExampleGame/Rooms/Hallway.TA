@@ -4,8 +4,8 @@ description {
     On your left is what appears to be the living room, and on your right is the kitchen. 
 }
 directions {
-    !Back: StartingRoom
-    Closet: StartingRoom
+    !Back: Closet
+    Closet: Closet
     !Left: LivingRoom
     Living Room: LivingRoom
     !Right: Kitchen
