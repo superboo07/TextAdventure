@@ -3,6 +3,7 @@ Description {
     
     On the right side of the room is an crawlspace, though you doubt it leads anywhere useful. On the left is an open door that leads into an hallway. 
 }
+
 directions {
     !Left: Hallway
     Hallway: Hallway
