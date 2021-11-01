@@ -39,10 +39,10 @@ def goToRoom(roomName):
     return
 
 def directionsLoop(roomName):
+    commandSplit = []
+
     directions = getRoomDirections(roomName, False)
     command = input("> ").lower()
-
-    commandSplit = []
     
     commandSplit = command.split(" ", 1)
 
@@ -88,29 +88,31 @@ def getRoomFileArray(roomName):
     return roomFileArray
     
 def getRoomDescription(roomName):
-    roomFileArray = getRoomFileArray(roomName)
     descriptionArray = []
-    foundDiscription = False
+    foundDescription = False
+
+    roomFileArray = getRoomFileArray(roomName)
     for roomVar in roomFileArray:
-        if (foundDiscription == False):
+        if (foundDescription == False):
             roomVarSplit = roomVar.split("{")
             if (roomVarSplit[0].lower() == 'description '): 
-                foundDiscription = True 
+                foundDescription = True 
                 if (roomVarSplit[1].__len__() > 0): descriptionArray.append(roomVarSplit[1])
         else:
             if (not roomVar.__contains__("}")):
                 descriptionArray.append(roomVar)
             else: 
-                foundDiscription = False
+                foundDescription = False
                 roomVarSplit = roomVar.split("}")
                 if (roomVarSplit[0].__len__() > 0): descriptionArray.append(roomVarSplit[0])
     return descriptionArray
 
 def getRoomDirections(roomName, excludeHideMarker):
-    roomFileArray = getRoomFileArray(roomName)
-    foundDirections = False
-    # There must be something in the list for it to allow adding to the list.
     directionsList = {"": ''}
+    foundDirections = False
+
+    roomFileArray = getRoomFileArray(roomName)
+    # There must be something in the list for it to allow adding to the list.
     for roomVar in roomFileArray:
         if (foundDirections == False):
             roomVarSplit = roomVar.split("{")
