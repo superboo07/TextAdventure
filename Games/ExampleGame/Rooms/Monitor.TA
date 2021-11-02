@@ -1,8 +1,0 @@
-description {
-    The monitor screen displays nothing but a line of text that reads "I'm glad I'm not hardcoded." 
-    
-    To stop reading the text on the monitor type 'Go Back'
-}
-directions {
-    Back: SpecialRoom
-}

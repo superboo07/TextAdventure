@@ -49,3 +49,20 @@ Directions {
     Crawlspace: Crawlspace1
 }
 ```
+
+### Item Block
+
+Item ID's are required and must be unique, as the engine will refuse to load objects that have the same id as another. 
+
+Format:
+
+```
+Items :{
+    [ItemName] [
+        id: [ID]
+        Description {
+            [Description]
+        }
+    ]
+}:
+```

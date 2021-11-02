@@ -8,7 +8,6 @@
 #   [Now do logic]
 
 import os
-
 from dataclasses import dataclass
 
 # List all global variables here
@@ -93,17 +92,24 @@ def directionsLoop(roomName):
     elif (commandSplit[0] == "look"):
         if (commandSplit.__len__() > 1):
             if (commandSplit[1].strip() == "around"):
+                # look around
                 directions = getRoomDirections(roomName, False)
                 print("You can go:")
+
                 for direction in directions: 
                     if (not direction.__contains__("!")): print(direction.capitalize())
+                print("\nYou can look at:")
+
+                for item in worldItems: 
+                    if (worldItems[item].currentRoom == roomName): print(worldItems[item].name.capitalize())
             else:
+                # look [item]
                 items = dict()
                 for itemID in worldItems:
                     itemName = worldItems[itemID].name
                     items[itemName] = itemID
-                if items.__contains__(commandSplit[1].strip()):
-                    for description in worldItems.get(items.get(commandSplit[1].strip())).description: print(description)
+                if ( items.__contains__( commandSplit[1].strip() ) and worldItems[ items[commandSplit[1].strip()] ].currentRoom == roomName ):
+                    for description in worldItems[ items[commandSplit[1].strip() ] ].description: print(description.capitalize())
                 else: print("I don't know what you are trying to look at")
         else: print("I don't know what to look at")
         directionsLoop(roomName)
@@ -149,8 +155,8 @@ def getRoomDirections(roomName, excludeHideMarker):
     return directionsList
 
 def getItemsInRoom(roomName):
+    debugPrint("Searching for items in " + roomName)
     itemClassList = list()
-
     gameFileArray = getRoomFileArray(roomName)
     itemsList = getStringInbetween(gameFileArray, 'items ', ':{', '}:')
     for item in itemsList:
@@ -158,8 +164,6 @@ def getItemsInRoom(roomName):
             # Ensure variables aren't already filled so the interpter ALWAYS errors out if the user forgets to input them
             description = None
             ID = None
-            # del id
-            # del description
             itemVars = getStringInbetween(itemsList, item.split(" [")[0].lower() + " ", '[', ']')
             for itemVar in itemVars:
                 if (itemVar.__contains__(" {")):
@@ -186,9 +190,11 @@ def loadItem(item):
     global worldItems
 
     if (worldItems.__contains__(item.id) ): 
-        debugPrint("Tried to load already loaded item: " + item.name)
+        debugPrint("Tried to load already loaded item: " + item.name + "[" + item.id + "]")
         return False
-    else: worldItems[item.id] = item
+    else: 
+        worldItems[item.id] = item
+        debugPrint("Succesfully loaded item: " + item.name + "[" + item.id + "]")
     return True
 
 def getStringInbetween(stringArray, name, start, end):
