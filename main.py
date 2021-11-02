@@ -7,12 +7,27 @@
 #
 #   [Now do logic]
 
-
 import os
+
+from dataclasses import dataclass
 
 # List all global variables here
 global gameName
 global gameInfoList
+global worldItems
+worldItems = dict()
+debug = False
+
+@dataclass
+class worldItem:
+    description: list
+    currentRoom: str
+    id: str
+    name: str
+
+def debugPrint(string):
+    if (debug):
+        print("Debug: ", string)
 
 def main():
     global gameName
@@ -32,7 +47,7 @@ def main():
 
 def startGame():
     global gameInfoList
-    gameInfoList = {'': ""}
+    gameInfoList = dict()
 
     with open('Games/' + gameName + "/GameInfo.TA") as aboutFile: aboutFileArray = [aboutFileLine.strip() for aboutFileLine in aboutFile]
     for aboutFileVar in aboutFileArray:
@@ -41,15 +56,21 @@ def startGame():
     goToRoom(gameInfoList['startingroom'])
     
 def goToRoom(roomName):
+    items = list()
+
     os.system('cls||clear')
     os.system("title " + roomName)
+
+    items = getItemsInRoom(roomName)
+    for item in items:
+        loadItem(item)
     descriptions = getRoomDescription(roomName)
     for description in descriptions: print(description)
     directionsLoop(roomName)
     return
 
 def directionsLoop(roomName):
-    commandSplit = []
+    commandSplit = list()
 
     command = input("> ").lower()
     
@@ -76,7 +97,14 @@ def directionsLoop(roomName):
                 print("You can go:")
                 for direction in directions: 
                     if (not direction.__contains__("!")): print(direction.capitalize())
-            else: print("I don't know what you are trying to look at")
+            else:
+                items = dict()
+                for itemID in worldItems:
+                    itemName = worldItems[itemID].name
+                    items[itemName] = itemID
+                if items.__contains__(commandSplit[1].strip()):
+                    for description in worldItems.get(items.get(commandSplit[1].strip())).description: print(description)
+                else: print("I don't know what you are trying to look at")
         else: print("I don't know what to look at")
         directionsLoop(roomName)
         return
@@ -106,8 +134,8 @@ def getRoomDescription(roomName):
     return descriptionArray
 
 def getRoomDirections(roomName, excludeHideMarker):
-    directionsArray = []
-    directionsList = {"": ''}
+    directionsArray = list()
+    directionsList = dict()
     foundDirections = False
 
     roomFileArray = getRoomFileArray(roomName)
@@ -120,8 +148,51 @@ def getRoomDirections(roomName, excludeHideMarker):
 
     return directionsList
 
+def getItemsInRoom(roomName):
+    itemClassList = list()
+
+    gameFileArray = getRoomFileArray(roomName)
+    itemsList = getStringInbetween(gameFileArray, 'items ', ':{', '}:')
+    for item in itemsList:
+        if (item.__contains__(" [")): 
+            # Ensure variables aren't already filled so the interpter ALWAYS errors out if the user forgets to input them
+            description = None
+            ID = None
+            # del id
+            # del description
+            itemVars = getStringInbetween(itemsList, item.split(" [")[0].lower() + " ", '[', ']')
+            for itemVar in itemVars:
+                if (itemVar.__contains__(" {")):
+                    itemVarSplit = itemVar.split(" {")
+                    if (itemVarSplit[0].lower() == "description"): 
+                        description = getStringInbetween(itemVars, "description ", '{', '}')
+                elif (itemVar.__contains__(": ")):
+                    itemVarSplit = itemVar.split(": ")
+                    if (itemVarSplit[0].lower() == "id"): 
+                        ID = itemVarSplit[1]
+            if (description != None and ID != None):
+                itemClass = worldItem(description, roomName, ID, item.split(" [")[0].lower())
+                itemClassList.append(itemClass)
+                debugPrint("Found " + item.split(" [")[0] + "[" + ID + "]")
+            else:
+                if (description == None):
+                    debugPrint("Item " + item.split(" [")[0] + " is missing it's description")
+                if (ID == None):
+                    debugPrint("Item " + item.split(" [")[0] + " is missing it's id")
+    return itemClassList
+
+
+def loadItem(item):
+    global worldItems
+
+    if (worldItems.__contains__(item.id) ): 
+        debugPrint("Tried to load already loaded item: " + item.name)
+        return False
+    else: worldItems[item.id] = item
+    return True
+
 def getStringInbetween(stringArray, name, start, end):
-    outputArray = []
+    outputArray = list()
     index = -1
     savedIndex = 0
     foundName = False
@@ -141,10 +212,10 @@ def getStringInbetween(stringArray, name, start, end):
                         savedIndex -= 1
                         if ( stringArray[savedIndex].strip().__len__() > 0):
                             # Check for start of block
+                            if (stringArray[savedIndex].__contains__(end)): foundEndOfBlock=True
                             if ( stringArray[savedIndex].__contains__(start) ): 
                                 if (foundEndOfBlock): foundEndOfBlock = False
                                 else: break
-                            elif (stringArray[savedIndex].__contains__(end)): foundEndOfBlock=True
                             # If it has reached this point without breaking it should mean the block isn't embedded in another block
                             if (savedIndex == 0): foundValidVariable = True
                 else: foundValidVariable = True

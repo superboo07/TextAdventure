@@ -10,11 +10,3 @@ directions {
     !Right: Crawlspace1
     Crawlspace: Crawlspace1
 }
-
-Items {
-    Grass [
-        Description {
-            Fuck
-        }
-    ]
-}
