@@ -51,7 +51,6 @@ def goToRoom(roomName):
 def directionsLoop(roomName):
     commandSplit = []
 
-    directions = getRoomDirections(roomName, False)
     command = input("> ").lower()
     
     commandSplit = command.split(" ", 1)
@@ -73,6 +72,7 @@ def directionsLoop(roomName):
     elif (commandSplit[0] == "look"):
         if (commandSplit.__len__() > 1):
             if (commandSplit[1].strip() == "around"):
+                directions = getRoomDirections(roomName, False)
                 print("You can go:")
                 for direction in directions: 
                     if (not direction.__contains__("!")): print(direction.capitalize())
@@ -122,14 +122,36 @@ def getRoomDirections(roomName, excludeHideMarker):
 
 def getStringInbetween(stringArray, name, start, end):
     outputArray = []
+    index = -1
+    savedIndex = 0
     foundName = False
+    foundValidVariable = False
 
     for string in stringArray:
+        index += 1
         if (foundName == False):
+            foundValidVariable = False
+            foundEndOfBlock = False
             stringSplit = string.split(start)
-            if (stringSplit[0].lower() == name): 
-                foundName = True 
-                if (stringSplit[1].__len__() > 0): outputArray.append(stringSplit[1])
+            if (stringSplit[0].lower() == name):
+                if (index > 0):
+                    savedIndex = index
+                    # Make sure this block isn't in another block
+                    while (foundValidVariable == False):
+                        savedIndex -= 1
+                        if ( stringArray[savedIndex].strip().__len__() > 0):
+                            # Check for start of block
+                            if ( stringArray[savedIndex].__contains__(start) ): 
+                                if (foundEndOfBlock): foundEndOfBlock = False
+                                else: break
+                            elif (stringArray[savedIndex].__contains__(end)): foundEndOfBlock=True
+                            # If it has reached this point without breaking it should mean the block isn't embedded in another block
+                            if (savedIndex == 0): foundValidVariable = True
+                else: foundValidVariable = True
+
+                if (foundValidVariable == True):
+                    foundName = True
+                    if (stringSplit[1].__len__() > 0): outputArray.append(stringSplit[1])
         else:
             if (not string.__contains__(end)):
                 outputArray.append(string)
