@@ -9,11 +9,11 @@ directions {
     Hallway: Hallway
 }
 
-Items :{
+Items {
     Couch [
         id: 1234
         Description {
             An old couch
         }
     ]
-}:
+}

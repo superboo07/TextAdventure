@@ -6,7 +6,7 @@ directions {
     Crawlspace: Crawlspace2
 }
 
-Items :{
+Items {
     Monitor [
         ID: 5545257
         Description |{
@@ -16,4 +16,4 @@ Items :{
         }|
         Type: scenery
     ]
-}:
+}
