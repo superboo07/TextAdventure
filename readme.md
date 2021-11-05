@@ -57,12 +57,12 @@ Item ID's are required and must be unique, as the engine will refuse to load obj
 Format:
 
 ```
-Items :{
+Items {
     [ItemName] [
         id: [ID]
         Description {
             [Description]
         }
     ]
-}:
+}
 ```
