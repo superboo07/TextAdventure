@@ -9,8 +9,11 @@ directions {
 Items :{
     Monitor [
         ID: 5545257
-        Description {
-            The monitor screen displays nothing but a line of text that reads "I'm glad I'm not hardcoded." 
-        }
+        Description |{
+            lookat {
+                The monitor screen displays nothing but a line of text that reads "I'm glad I'm not hardcoded." 
+            }
+        }|
+        Type: scenery
     ]
 }:

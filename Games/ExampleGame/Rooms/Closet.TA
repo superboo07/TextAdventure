@@ -10,3 +10,21 @@ directions {
     !Right: Crawlspace1
     Crawlspace: Crawlspace1
 }
+
+Items {
+    Door [
+        ID: 5435
+        Description |{
+            lookat {
+                An old wooden door
+            }
+            open {
+                You open the door
+            }
+            close {
+                You close the door
+            }
+        }|
+        Type: Door
+    ]
+}
