@@ -52,13 +52,13 @@ Directions {
 
 ### Item Block
 
-Item ID's are required and must be unique, as the engine will refuse to load objects that have the same id as another. 
+Item ID's are required and must be unique, as the engine will refuse to load objects that have the same id as another.
 
 Format:
 
 ```
 Items {
-    [ItemName] [
+    [ItemName] | [ItemName2][
         id: [ID]
         Description {
             [Description]

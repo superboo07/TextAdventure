@@ -35,7 +35,7 @@ commands = {"open": openDoor}
 
 @dataclass
 class worldItem:
-    name: str
+    names: list
     ID: str
     descriptions: dict
     type: str
@@ -122,15 +122,15 @@ def directionsLoop(roomName):
                     print("\nYou can look at:")
 
                     for item in worldItems: 
-                        if (worldItems[item].currentRoom == roomName): print(worldItems[item].name.capitalize())
+                        if (worldItems[item].currentRoom == roomName): print(worldItems[item].names[0].capitalize())
             else:
                 # look [item]
                 items = getAllItemsInRoom(roomName)
                 itemsDictionary = dict()
                 for item in items:
-                    itemsDictionary[item.name] = item
+                    for name in item.names: itemsDictionary[name] = item
                 if ( itemsDictionary.__contains__( commandSplit[1].strip() )):
-                    for description in itemsDictionary[ commandSplit[1].strip() ].descriptions["lookat "]: print(description)
+                    for description in itemsDictionary[ commandSplit[1].strip() ].descriptions["lookat"]: print(description)
                 else: print("I don't know what you are trying to look at")
         else: print("I don't know what to look at")
         directionsLoop(roomName)
@@ -162,29 +162,18 @@ def getRoomDescription(roomName):
     foundDescription = False
 
     roomFileArray = getRoomFileArray(roomName)
-    descriptionArray = TAUtilities.getBlock(
-        [
-            TAUtilities.block("description", '{', '}')
-        ],
-        roomFileArray
-    )
+    descriptionArray = TAUtilities.getBlock([TAUtilities.block("description", '{', '}')], roomFileArray)
     return descriptionArray
 
 def getRoomDirections(roomName, excludeHideMarker):
-    directionsArray = list()
     directionsList = dict()
-    foundDirections = False
-
     roomFileArray = getRoomFileArray(roomName)
-    directionsArray = TAUtilities.getBlock(
-        [TAUtilities.block("directions", '{', '}')],
-        roomFileArray
-    )
-    for direction in directionsArray:
-        directionSplit = direction.split(": ")
-        if (excludeHideMarker):
-            directionSplit[0] = directionSplit[0].replace("!", "")
-        directionsList[directionSplit[0].lower()] = directionSplit[1]
+    directionsListTemp = TAUtilities.getVariable("*", [TAUtilities.block("directions", '{', '}')], ":", roomFileArray)
+    
+    if (excludeHideMarker):
+        for direction in directionsListTemp:
+            directionsList[direction.replace("!", "")] = directionsListTemp[direction]
+    else: directionsList = directionsListTemp
 
     return directionsList
 
@@ -197,46 +186,24 @@ def findItemsInRoomFile(roomName):
     gameFileArray = getRoomFileArray(roomName)
     itemsList = TAUtilities.getBlock(
         [
-            TAUtilities.block("items", '{', '}')
+            TAUtilities.block("items", '{', '}'),
+            TAUtilities.block("*", '[', ']')
         ],
         gameFileArray
     )
     for item in itemsList:
-        if (item.__contains__(" [")): 
-            multiLineVars.clear()
-            oneLineVars.clear()
-            itemVars = getStringInbetween(itemsList, item.split(" [")[0].lower() + " ", '[', ']')
-            for itemVar in itemVars:
-                if (itemVar.__contains__(" |{")):
-                    itemVarSplit = itemVar.split("|{")
-                    multiDictVars = getStringInbetween(itemVars, itemVarSplit[0].lower(), '|{', '}|')
-                    for description in multiDictVars:
-                        if ( description.__contains__(" {") ):
-                            dictVarSplit = description.split("{")
-                            if (multiLineVars.__contains__(itemVarSplit[0].lower())):
-                                multiLineVars[itemVarSplit[0].lower()][dictVarSplit[0].lower()] = getStringInbetween(multiDictVars, dictVarSplit[0].lower(), '{', '}')
-                            else: multiLineVars[itemVarSplit[0].lower()] = { dictVarSplit[0].lower(): getStringInbetween(multiDictVars, dictVarSplit[0].lower(), '{', '}') }
-
-                elif (itemVar.__contains__(" <{")):
-                    itemVarSplit = itemVar.split("<{")
-                    multiDictVars = getStringInbetween(itemVars, itemVarSplit[0].lower(), '<{', '}>')
-                    for description in multiDictVars:
-                        if ( description.__contains__(": ") ):
-                            dictVarSplit = description.split(": ")
-                            multiLineVars[itemVarSplit[0].lower()] = { dictVarSplit[0].lower(): dictVarSplit[1] }
-                
-                elif (itemVar.__contains__(": ")):
-                    itemVarSplit = itemVar.split(": ")
-                    oneLineVars[itemVarSplit[0].lower()] = itemVarSplit[1]
-            if (multiLineVars.__contains__("description ") and oneLineVars.__contains__("id")):
-                itemClass = worldItem(item.split(" [")[0].lower(), oneLineVars["id"], multiLineVars["description "], 'scenery', roomName)
-                itemClassList.append(itemClass)
-                debugPrint("Found " + item.split(" [")[0] + "[" + oneLineVars["id"] + "]")
-            else:
-                if (not multiLineVars.__contains__("description ")):
-                    debugPrint("Item " + item.split(" [")[0] + " is missing it's description")
-                if (not oneLineVars.__contains__('id')):
-                    debugPrint("Item " + item.split(" [")[0] + " is missing it's id")
+        debugPrint(item)
+        descriptions = TAUtilities.getBlock(
+            [
+                TAUtilities.block("description", "{", "}"),
+                TAUtilities.block("*", "{", "}")
+            ],
+            itemsList[item]
+        )
+        id = TAUtilities.getVariable('ID', [], ':', itemsList[item])
+        names = [names.lower().strip() for names in item.split("|")]
+        itemClass = worldItem(names, id, descriptions, 'scenery', roomName)
+        itemClassList.append(itemClass)
     return itemClassList
 
 def getAllItemsInRoom(roomName):
@@ -250,11 +217,11 @@ def loadItem(item):
     global worldItems
 
     if (worldItems.__contains__(item.ID) ): 
-        debugPrint("Tried to load already loaded item: " + item.name + "[" + item.ID + "]")
+        debugPrint("Tried to load already loaded item: " + item.names[0] + "[" + item.ID + "]")
         return False
     else: 
         worldItems[item.ID] = item
-        debugPrint("Succesfully loaded item: " + item.name + "[" + item.ID + "]")
+        debugPrint("Succesfully loaded item: " + item.names[0] + "[" + item.ID + "]")
     return True
 
 def getStringInbetween(stringArray, name, start, end):

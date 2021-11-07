@@ -1,19 +1,20 @@
 description {
     You enter the room to see an small desk with an monitor sitting on top. It's screen is on and demands attention. 
 }
+
 directions {
     !Back: Crawlspace2
     Crawlspace: Crawlspace2
 }
 
 Items {
-    Monitor [
+    Monitor | Screen [
         ID: 5545257
-        Description |{
+        Description {
             lookat {
                 The monitor screen displays nothing but a line of text that reads "I'm glad I'm not hardcoded." 
             }
-        }|
+        }
         Type: scenery
     ]
 }
