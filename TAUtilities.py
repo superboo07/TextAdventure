@@ -20,7 +20,7 @@ def getBlock(blocks: list, input: list):
 
             if (string.__contains__(blocks[index].seperatorStart)):
                 if (offsetindex == 0): 
-                    foundBlockName = string.split(blocks[index].seperatorStart)[0].strip()
+                    foundBlockName = string.split(blocks[index].seperatorStart)[0].strip().lower()
                     dontAppend = True
                 offsetindex += 1
             elif (string.__contains__(blocks[index].seperatorEnd)):
